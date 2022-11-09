@@ -78,12 +78,12 @@ class Movie:
         self.genre = genre
         # Variable
         self.viewed = viewed
-
+    @staticmethod
     def dill(self):
         with open('database.dill', 'ab') as handle:
             dill.dump(self, handle, protocol=dill.HIGHEST_PROTOCOL)
-
-    def undill(self):
+    @staticmethod
+    def undill():
         data = []
         with open('database.dill', 'rb') as f:
             while True:
@@ -112,10 +112,10 @@ class Series(Movie):
 
 def load():
     movies_list = []
-    new = Movie(title='open_movies', release_year='0000', genre='none')
-    for record in new.undill():
+    for record in Movie.undill():
         movies_list.append(record)
     return movies_list
+
 
 
 def get_movies():
@@ -203,7 +203,7 @@ def generate(x):
         new = Series(episode, season, title, release_year, genre)
     else:
         new = Movie(title, release_year, genre)
-    new.dill()
+    new.dill(new)
 
 
 def next_operation(y, operation_type):
