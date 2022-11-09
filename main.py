@@ -78,20 +78,6 @@ class Movie:
         self.genre = genre
         # Variable
         self.viewed = viewed
-    @staticmethod
-    def dill(self):
-        with open('database.dill', 'ab') as handle:
-            dill.dump(self, handle, protocol=dill.HIGHEST_PROTOCOL)
-    @staticmethod
-    def undill():
-        data = []
-        with open('database.dill', 'rb') as f:
-            while True:
-                try:
-                    data.append(dill.load(f))
-                except EOFError:
-                    break
-        return data
 
     def play(self):
         self.viewed += 1
@@ -110,14 +96,6 @@ class Series(Movie):
         return f'{self.title} S{self.season}E{self.episode}'
 
 
-def load():
-    movies_list = []
-    for record in Movie.undill():
-        movies_list.append(record)
-    return movies_list
-
-
-
 def get_movies():
     only_movies = []
     for record in load():
@@ -132,7 +110,7 @@ def get_movies():
 
 def get_series():
     only_series = []
-    for record in load():
+    for record in library:
         if isinstance(record, Series):
             only_series.append(record)
     sorted_by_title = sorted(only_series, key=lambda movie: movie.title)
@@ -143,27 +121,31 @@ def get_series():
 def search():
     z = input('Jakiego Filmu/Serialu szukasz? Podaj tytuł: ')
     found = False
-    for i in load():
+    for i in library:
         if i.title.upper() == str(z).upper():
             searched = i
             found = True
     if found:
-        print(searched)
+        while True:
+            x = input(f'Znalazłem {searched} czy chcesz wyświetlić? Y/N: ')
+            if check_dict(x, YN):
+                if str(x).upper() == "Y":
+                    searched.play()
+                    print('Tytuł został odtworzony - viewed +1')
     else:
         print('Nie znalazłem takiego tytułu.')
 
 
 def generate_views():
-    all_titles = load()
-    pick_title = random.randint(0, len(all_titles) - 1)
-    all_titles[pick_title].viewed += random.randint(1, 100)
-    for i in range(0, len(all_titles)):
+    pick_title = random.randint(0, len(library) - 1)
+    library[pick_title].viewed += random.randint(1, 100)
+    for i in range(0, len(library)):
         if i == 0:
             with open('database.dill', 'wb') as handle:
-                dill.dump(all_titles[i], handle, protocol=dill.HIGHEST_PROTOCOL)
+                dill.dump(library[i], handle, protocol=dill.HIGHEST_PROTOCOL)
         else:
             with open('database.dill', 'ab') as handle:
-                dill.dump(all_titles[i], handle, protocol=dill.HIGHEST_PROTOCOL)
+                dill.dump(library[i], handle, protocol=dill.HIGHEST_PROTOCOL)
 
 
 def g10():
@@ -203,7 +185,7 @@ def generate(x):
         new = Series(episode, season, title, release_year, genre)
     else:
         new = Movie(title, release_year, genre)
-    new.dill(new)
+    library.append(new)
 
 
 def next_operation(y, operation_type):
@@ -235,16 +217,15 @@ def add_new():
 
 def popular():
     print('Najpopularniejsze tytuły: ')
-    all_titles = load()
-    by_popularity = sorted(all_titles, key=lambda movie: movie.viewed, reverse=True)
+    by_popularity = sorted(library, key=lambda movie: movie.viewed, reverse=True)
     for i in range(0, 3):
         print(f"{i + 1}. {by_popularity[i]}")
 
 
 if __name__ == "__main__":
     print('Biblioteka filmów')
-
+    library = [Movie('Szklana Pułapka', 1988, 'Akcja'), Movie('Przekręt', 2000, 'Komedia'), Movie('Joker', 2019, 'Dramat'), Series('01', '01', 'South Park', 1996, 'Komedia')]
     add_new()
-    #search()
+    search()
     generate_views()
     popular()
