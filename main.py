@@ -98,7 +98,7 @@ class Series(Movie):
 
 def get_movies():
     only_movies = []
-    for record in load():
+    for record in library:
         if isinstance(record, Series):
             continue
         else:
