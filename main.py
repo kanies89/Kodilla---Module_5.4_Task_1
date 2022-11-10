@@ -49,6 +49,7 @@ Wyświetli listę top 3 najpopularniejszych tytułów.
 Kod udostępnij na Githubie i wyślij link do Mentora.
 """
 import random
+from datetime import date
 
 GENRE = {
     'A': 'Akcja',
@@ -131,6 +132,8 @@ def search():
                 if str(x).upper() == "Y":
                     searched.play()
                     print('Tytuł został odtworzony - viewed +1')
+                else:
+                    break
     else:
         print('Nie znalazłem takiego tytułu.')
 
@@ -156,6 +159,18 @@ def check_dict(x, y):
     else:
         return False
 
+def check_int(x):
+    while True:
+        try:
+            w = int(x)
+        except ValueError:
+            w = input('Podaj liczbę od 1 do 99: ')
+        else:
+            if w in range(1, 100):
+                return w
+            else:
+                x = input('Podaj liczbę od 1 do 99: ')
+
 
 def generate(x):
     title = input('Podaj tytuł: ')
@@ -167,8 +182,8 @@ def generate(x):
             genre = GENRE[check_genre]
             break
     if str(x).upper() == 'S':
-        episode = input('Podaj numer odcinka: ')
-        season = input('Podaj numer sezonu: ')
+        episode = str(check_int(input('Podaj numer odcinka: '))).zfill(2)
+        season = str(check_int(input('Podaj numer sezonu: '))).zfill(2)
         new = Series(episode, season, title, release_year, genre)
     else:
         new = Movie(title, release_year, genre)
@@ -203,7 +218,7 @@ def add_new():
 
 
 def top_titles():
-    print('Najpopularniejsze tytuły: ')
+    print(f'\nNajpopularniejsze filmy i seriale dnia {date.today().day}-{date.today().month}-{date.today().year}: ')
     by_popularity = sorted(library, key=lambda movie: movie.viewed, reverse=True)
     for i in range(0, 3):
         print(f"{i + 1}. {by_popularity[i]}")
