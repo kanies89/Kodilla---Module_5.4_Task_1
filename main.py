@@ -177,7 +177,7 @@ def generate(x):
     release_year = input(f'Podaj rok premiery ({title}): ')
     while True:
         check_genre = str(input(
-            f'Podaj gatunek d;a tytułu ({title}) - (H)orror / (S)ci-Fi / (F)antastyka / (A)kcja / (D)ramat / (K)omedia: ')).upper()
+            f'Podaj gatunek dla tytułu ({title}) - (H)orror / (S)ci-Fi / (F)antastyka / (A)kcja / (D)ramat / (K)omedia: ')).upper()
         if check_dict(check_genre, GENRE):
             genre = GENRE[check_genre]
             break
