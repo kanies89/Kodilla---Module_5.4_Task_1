@@ -144,7 +144,7 @@ def generate_views():
 
 
 def g10():
-    for i in range(0,10):
+    for i in range(0, 10):
         generate_views()
 
 
@@ -158,6 +158,7 @@ def check_dict(x, y):
         return True
     else:
         return False
+
 
 def check_int(x):
     while True:
@@ -226,7 +227,8 @@ def top_titles():
 
 if __name__ == "__main__":
     print('Biblioteka filmów')
-    library = [Movie('Szklana Pułapka', 1988, 'Akcja'), Movie('Przekręt', 2000, 'Komedia'), Movie('Joker', 2019, 'Dramat'), Series('01', '01', 'South Park', 1996, 'Komedia')]
+    library = [Movie('Szklana Pułapka', 1988, 'Akcja'), Movie('Przekręt', 2000, 'Komedia'),
+               Movie('Joker', 2019, 'Dramat'), Series('01', '01', 'South Park', 1996, 'Komedia')]
     add_new()
     search()
     generate_views()
