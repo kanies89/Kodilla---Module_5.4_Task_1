@@ -48,7 +48,6 @@ gdzie <data> to bieżąca data w formacie DD.MM.RRRR.
 Wyświetli listę top 3 najpopularniejszych tytułów.
 Kod udostępnij na Githubie i wyślij link do Mentora.
 """
-import dill
 import random
 
 GENRE = {
@@ -139,23 +138,11 @@ def search():
 def generate_views():
     pick_title = random.randint(0, len(library) - 1)
     library[pick_title].viewed += random.randint(1, 100)
-    for i in range(0, len(library)):
-        if i == 0:
-            with open('database.dill', 'wb') as handle:
-                dill.dump(library[i], handle, protocol=dill.HIGHEST_PROTOCOL)
-        else:
-            with open('database.dill', 'ab') as handle:
-                dill.dump(library[i], handle, protocol=dill.HIGHEST_PROTOCOL)
 
 
 def g10():
-    pass
-
-
-def top_titles(content_type):
-    content_type
-
-    pass
+    for i in range(0,10):
+        generate_views()
 
 
 def choose():
@@ -171,11 +158,11 @@ def check_dict(x, y):
 
 
 def generate(x):
-    title = input('Podaj tytuł filmu: ')
-    release_year = input(f'Podaj rok filmu ({title}): ')
+    title = input('Podaj tytuł: ')
+    release_year = input(f'Podaj rok premiery ({title}): ')
     while True:
         check_genre = str(input(
-            f'Podaj gatunek filmu ({title}) - (H)orror / (S)ci-Fi / (F)antastyka / (A)kcja / (D)ramat / (K)omedia: ')).upper()
+            f'Podaj gatunek d;a tytułu ({title}) - (H)orror / (S)ci-Fi / (F)antastyka / (A)kcja / (D)ramat / (K)omedia: ')).upper()
         if check_dict(check_genre, GENRE):
             genre = GENRE[check_genre]
             break
@@ -215,7 +202,7 @@ def add_new():
         print('\n')
 
 
-def popular():
+def top_titles():
     print('Najpopularniejsze tytuły: ')
     by_popularity = sorted(library, key=lambda movie: movie.viewed, reverse=True)
     for i in range(0, 3):
@@ -228,4 +215,5 @@ if __name__ == "__main__":
     add_new()
     search()
     generate_views()
-    popular()
+    g10()
+    top_titles()
