@@ -225,9 +225,9 @@ def add_new():
         print('\n')
 
 
-def top_titles():
+def top_titles(library_list):
     print(f'\nNajpopularniejsze filmy i seriale dnia {date.today().day}-{date.today().month}-{date.today().year}: ')
-    by_popularity = sorted(library, key=lambda movie: movie.viewed, reverse=True)
+    by_popularity = sorted(library_list, key=lambda movie: movie.viewed, reverse=True)
     for i in range(3):
         print(f"{i + 1}. {by_popularity[i]}")
 
@@ -240,4 +240,4 @@ if __name__ == "__main__":
     search()
     generate_views()
     g10()
-    top_titles()
+    top_titles(library)
