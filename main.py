@@ -70,19 +70,31 @@ TEXT = [
     'Czy chcesz wyświetlić{0} Filmy/Seriale? Y/N: '
 ]
 
-
-SEASON_EPISODE = {
-    '01': 'pierwszy',
-    '02': 'drugi',
-    '03': 'trzeci',
-    '04': 'czwarty',
-    '05': 'piąty',
-    '06': 'szósty',
-    '07': 'siódmy',
-    '08': 'ósmy',
-    '09': 'dziewiąty',
+UNITS = {
+    '1': ['jeden', 'pierwszy'],
+    '2': ['dwu', 'drugi'],
+    '3': ['trzy', 'trzeci'],
+    '4': ['czter', 'czwarty'],
+    '5': ['pięt', 'piąty'],
+    '6': ['szes', 'szósty'],
+    '7': ['siedem', 'siódmy'],
+    '8': ['osiem', 'ósmy'],
+    '9': ['dzięwięt', 'dziewiąty'],
     '10': 'dziesiąty'
 }
+
+
+def change_to_word(to_change):
+    if to_change[0] == '0':
+        word = UNITS[to_change[1]][1]
+    elif to_change == '10':
+        word = UNITS[to_change]
+    elif to_change[0] == '1':
+        word = UNITS[to_change[1]][0] + "nasty"
+    else:
+        word = UNITS[to_change[0]][0] + "dziesty" + UNITS[to_change[1]][1]
+
+    return word
 
 
 class Movie:
@@ -107,26 +119,25 @@ class Series(Movie):
         self.season = season
 
     def __str__(self):
-        return f'{self.title} - S{self.season}E{self.episode} - sezon {SEASON_EPISODE[self.season]}, odcinek {SEASON_EPISODE[self.episode]}.'
+        return f'{self.title} - S{self.season}E{self.episode} - sezon {change_to_word(self.season)}, odcinek {change_to_word(self.episode)}.'
 
 
 def get_movies():
-    only_movies = []
-    get(Movie, only_movies)
+    return get(Movie)
 
 
 def get_series():
-    only_series = []
-    get(Series, only_series)
+    return get(Series)
 
 
-def get(ms_type, ms_list):
+def get(ms_type):
+    filtered_library = []
     for record in library:
         if type(record) == ms_type:
-            ms_list.append(record)
-    sorted_by_title = sorted(ms_list, key=lambda movie: movie.title)
-    for record in sorted_by_title:
-        print(record)
+            filtered_library.append(record)
+    sorted_by_title = sorted(filtered_library, key=lambda movie: movie.title)
+    return sorted_by_title
+
 
 def search():
     z = input('Jakiego Filmu/Serialu szukasz? Podaj tytuł: ')
@@ -165,10 +176,7 @@ def choose():
 
 
 def check_dict(x, y):
-    if x.upper() in y:
-        return True
-    else:
-        return False
+    return x.upper() in y
 
 
 def check_int(x):
@@ -218,18 +226,19 @@ def add_new():
     choose_bool = next_operation('', 1)
     if choose_bool:
         print('Dostępne filmy: ')
-        get_movies()
+        [print(item) for item in get_movies()]
         print('\n')
         print('Dostępne seriale: ')
-        get_series()
+        [print(item) for item in get_series()]
         print('\n')
 
 
 def top_titles(library_list):
-    print(f'\nNajpopularniejsze filmy i seriale dnia {date.today().day}-{date.today().month}-{date.today().year}: ')
     by_popularity = sorted(library_list, key=lambda movie: movie.viewed, reverse=True)
+    most_popular = []
     for i in range(3):
-        print(f"{i + 1}. {by_popularity[i]}")
+        most_popular.append(by_popularity[i])
+    return most_popular
 
 
 if __name__ == "__main__":
@@ -240,4 +249,6 @@ if __name__ == "__main__":
     search()
     generate_views()
     g10()
-    top_titles(library)
+
+    print(f'\nNajpopularniejsze filmy i seriale dnia {date.today().day}-{date.today().month}-{date.today().year}: ')
+    [print(f"{i + 1}. {top_titles(library)[i]}") for i in range(3)]
