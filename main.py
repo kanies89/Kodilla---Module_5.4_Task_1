@@ -71,6 +71,20 @@ TEXT = [
 ]
 
 
+SEASON_EPISODE = {
+    '01': 'pierwszy',
+    '02': 'drugi',
+    '03': 'trzeci',
+    '04': 'czwarty',
+    '05': 'piąty',
+    '06': 'szósty',
+    '07': 'siódmy',
+    '08': 'ósmy',
+    '09': 'dziewiąty',
+    '10': 'dziesiąty'
+}
+
+
 class Movie:
     def __init__(self, title, release_year, genre, viewed=0):
         self.title = title
@@ -93,43 +107,40 @@ class Series(Movie):
         self.season = season
 
     def __str__(self):
-        return f'{self.title} S{self.season}E{self.episode}'
+        return f'{self.title} - S{self.season}E{self.episode} - sezon {SEASON_EPISODE[self.season]}, odcinek {SEASON_EPISODE[self.episode]}.'
 
 
 def get_movies():
     only_movies = []
-    for record in library:
-        if isinstance(record, Series):
-            continue
-        else:
-            only_movies.append(record)
-    sorted_by_title = sorted(only_movies, key=lambda movie: movie.title)
-    for record in sorted_by_title:
-        print(record)
+    get(Movie, only_movies)
 
 
 def get_series():
     only_series = []
+    get(Series, only_series)
+
+
+def get(ms_type, ms_list):
     for record in library:
-        if isinstance(record, Series):
-            only_series.append(record)
-    sorted_by_title = sorted(only_series, key=lambda movie: movie.title)
+        if type(record) == ms_type:
+            ms_list.append(record)
+    sorted_by_title = sorted(ms_list, key=lambda movie: movie.title)
     for record in sorted_by_title:
         print(record)
-
 
 def search():
     z = input('Jakiego Filmu/Serialu szukasz? Podaj tytuł: ')
     found = False
     for i in library:
-        if i.title.upper() == str(z).upper():
+        if i.title.upper() == z.upper():
             searched = i
             found = True
+            break
     if found:
         while True:
             x = input(f'Znalazłem {searched} czy chcesz wyświetlić? Y/N: ')
             if check_dict(x, YN):
-                if str(x).upper() == "Y":
+                if x.upper() == "Y":
                     searched.play()
                     print('Tytuł został odtworzony - viewed +1')
                 else:
@@ -139,12 +150,12 @@ def search():
 
 
 def generate_views():
-    pick_title = random.randint(0, len(library) - 1)
-    library[pick_title].viewed += random.randint(1, 100)
+    pick_title = random.choice(library)
+    pick_title.viewed += random.randint(1, 100)
 
 
 def g10():
-    for i in range(0, 10):
+    for i in range(10):
         generate_views()
 
 
@@ -154,7 +165,7 @@ def choose():
 
 
 def check_dict(x, y):
-    if str(x).upper() in y:
+    if x.upper() in y:
         return True
     else:
         return False
@@ -177,12 +188,12 @@ def generate(x):
     title = input('Podaj tytuł: ')
     release_year = input(f'Podaj rok premiery ({title}): ')
     while True:
-        check_genre = str(input(
-            f'Podaj gatunek dla tytułu ({title}) - (H)orror / (S)ci-Fi / (F)antastyka / (A)kcja / (D)ramat / (K)omedia: ')).upper()
+        check_genre = input(
+            f'Podaj gatunek dla tytułu ({title}) - (H)orror / (S)ci-Fi / (F)antastyka / (A)kcja / (D)ramat / (K)omedia: ').upper()
         if check_dict(check_genre, GENRE):
             genre = GENRE[check_genre]
             break
-    if str(x).upper() == 'S':
+    if x.upper() == 'S':
         episode = str(check_int(input('Podaj numer odcinka: '))).zfill(2)
         season = str(check_int(input('Podaj numer sezonu: '))).zfill(2)
         new = Series(episode, season, title, release_year, genre)
@@ -195,11 +206,7 @@ def next_operation(y, operation_type):
     while True:
         x = input(TEXT[operation_type].format(y))
         if check_dict(x, YN):
-            if str(x).upper() == 'N':
-                next_bool = False
-            else:
-                next_bool = True
-            return next_bool
+            return x.upper() == 'Y'
 
 
 def add_new():
@@ -221,7 +228,7 @@ def add_new():
 def top_titles():
     print(f'\nNajpopularniejsze filmy i seriale dnia {date.today().day}-{date.today().month}-{date.today().year}: ')
     by_popularity = sorted(library, key=lambda movie: movie.viewed, reverse=True)
-    for i in range(0, 3):
+    for i in range(3):
         print(f"{i + 1}. {by_popularity[i]}")
 
 
