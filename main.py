@@ -92,8 +92,10 @@ def change_to_word(to_change):
     elif to_change[0] == '1':
         word = UNITS[to_change[1]][0] + "nasty"
     else:
-        word = UNITS[to_change[0]][0] + "dziesty" + UNITS[to_change[1]][1]
-
+        if to_change[1] == '0':
+            word = UNITS[to_change[0]][0] + "dziesty"
+        else:
+            word = UNITS[to_change[0]][0] + "dziesty " + UNITS[to_change[1]][1]
     return word
 
 
@@ -170,9 +172,9 @@ def g10():
         generate_views()
 
 
-def choose():
+def choose(lib):
     x = input('Film/Serial - F/S: ')
-    generate(x)
+    return generate(x, lib)
 
 
 def check_dict(x, y):
@@ -192,7 +194,7 @@ def check_int(x):
                 x = input('Podaj liczbę od 1 do 99: ')
 
 
-def generate(x):
+def generate(x, lib):
     title = input('Podaj tytuł: ')
     release_year = input(f'Podaj rok premiery ({title}): ')
     while True:
@@ -207,8 +209,8 @@ def generate(x):
         new = Series(episode, season, title, release_year, genre)
     else:
         new = Movie(title, release_year, genre)
-    library.append(new)
-
+    lib.append(new)
+    return lib
 
 def next_operation(y, operation_type):
     while True:
@@ -217,10 +219,10 @@ def next_operation(y, operation_type):
             return x.upper() == 'Y'
 
 
-def add_new():
+def add_new(lib):
     choose_bool = next_operation('', 0)
     while choose_bool:
-        choose()
+        choose(lib)
         choose_bool = next_operation(' kolejną', 0)
 
     choose_bool = next_operation('', 1)
@@ -245,7 +247,7 @@ if __name__ == "__main__":
     print('Biblioteka filmów')
     library = [Movie('Szklana Pułapka', 1988, 'Akcja'), Movie('Przekręt', 2000, 'Komedia'),
                Movie('Joker', 2019, 'Dramat'), Series('01', '01', 'South Park', 1996, 'Komedia')]
-    add_new()
+    add_new(library)
     search()
     generate_views()
     g10()
