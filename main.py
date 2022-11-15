@@ -124,27 +124,27 @@ class Series(Movie):
         return f'{self.title} - S{self.season}E{self.episode} - sezon {change_to_word(self.season)}, odcinek {change_to_word(self.episode)}.'
 
 
-def get_movies():
-    return get(Movie)
+def get_movies(lib):
+    return get(Movie. lib)
 
 
-def get_series():
-    return get(Series)
+def get_series(lib):
+    return get(Series, lib)
 
 
-def get(ms_type):
+def get(ms_type, lib):
     filtered_library = []
-    for record in library:
+    for record in lib:
         if type(record) == ms_type:
             filtered_library.append(record)
     sorted_by_title = sorted(filtered_library, key=lambda movie: movie.title)
     return sorted_by_title
 
 
-def search():
+def search(lib):
     z = input('Jakiego Filmu/Serialu szukasz? Podaj tytuł: ')
     found = False
-    for i in library:
+    for i in lib:
         if i.title.upper() == z.upper():
             searched = i
             found = True
@@ -162,14 +162,14 @@ def search():
         print('Nie znalazłem takiego tytułu.')
 
 
-def generate_views():
-    pick_title = random.choice(library)
+def generate_views(lib):
+    pick_title = random.choice(lib)
     pick_title.viewed += random.randint(1, 100)
 
 
-def g10():
+def g10(lib):
     for i in range(10):
-        generate_views()
+        generate_views(lib)
 
 
 def choose(lib):
@@ -228,10 +228,10 @@ def add_new(lib):
     choose_bool = next_operation('', 1)
     if choose_bool:
         print('Dostępne filmy: ')
-        [print(item) for item in get_movies()]
+        [print(item) for item in get_movies(lib)]
         print('\n')
         print('Dostępne seriale: ')
-        [print(item) for item in get_series()]
+        [print(item) for item in get_series(lib)]
         print('\n')
 
 
@@ -248,9 +248,9 @@ if __name__ == "__main__":
     library = [Movie('Szklana Pułapka', 1988, 'Akcja'), Movie('Przekręt', 2000, 'Komedia'),
                Movie('Joker', 2019, 'Dramat'), Series('01', '01', 'South Park', 1996, 'Komedia')]
     add_new(library)
-    search()
-    generate_views()
-    g10()
+    search(library)
+    generate_views(library)
+    g10(library)
 
     print(f'\nNajpopularniejsze filmy i seriale dnia {date.today().day}-{date.today().month}-{date.today().year}: ')
     [print(f"{i + 1}. {top_titles(library)[i]}") for i in range(3)]
