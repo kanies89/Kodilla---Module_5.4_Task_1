@@ -125,7 +125,7 @@ class Series(Movie):
 
 
 def get_movies(lib):
-    return get(Movie. lib)
+    return get(Movie, lib)
 
 
 def get_series(lib):
