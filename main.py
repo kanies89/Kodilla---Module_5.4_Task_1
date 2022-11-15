@@ -237,10 +237,7 @@ def add_new(lib):
 
 def top_titles(library_list):
     by_popularity = sorted(library_list, key=lambda movie: movie.viewed, reverse=True)
-    most_popular = []
-    for i in range(3):
-        most_popular.append(by_popularity[i])
-    return most_popular
+    return by_popularity[:3]
 
 
 if __name__ == "__main__":
